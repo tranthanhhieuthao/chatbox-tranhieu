@@ -6,11 +6,11 @@
             app
             permanent
             class="blue-grey lighten-5"
-            expand-on-hover>
+            >
                 <sidebar />
         </v-navigation-drawer>
             <navbar />
-            <v-main>
+            <v-main style="margin-top: 130px;">
             <v-container>
                 <app />
             </v-container>

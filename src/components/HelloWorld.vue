@@ -115,11 +115,10 @@ export default {
 <style scoped>
 #content-chat {
         height: 600px;
-        margin-top: 130px;
         margin-bottom: 10px;
         width: 100%;
     }
     .wapper {
-
+      background: rgb(234, 240, 245);
     }
 </style>
