@@ -1,5 +1,5 @@
 <template>
-    <div class="wapper">
+    <div class="wapper" >
         <v-card
     :loading="loading"
     class="mx-auto my-12 form-login"
@@ -22,42 +22,91 @@
 
 
     <v-form
+    v-if="checkForm"
     style="padding: 10px;"
     ref="form"
-    v-model="valid"
     lazy-validation
   >
     
-
+      <!-- :rules="emailRules" -->
     <v-text-field
-      v-model="email"
-      :rules="emailRules"
+      v-model="login.email"
       label="E-mail"
       required
     ></v-text-field>
 
     <v-text-field
-      v-model="password"
+      v-model="login.password"
       type="password"
-      :rules="nameRules"
       label="Password"
       required
     ></v-text-field>
 
     <v-card-actions style="display: flex;justify-content: center;">
     <v-btn
-      :disabled="!valid"
       color="success"
       class="mr-4"
       style="margin-right: 10px; color: #59b4d1;"
-      @click="validate"
     >
       Submit
     </v-btn>
 
-    <a>
+    <v-btn @click="changeForm('REGISTER')">
       Register
-    </a>
+    </v-btn>
+    </v-card-actions>
+  </v-form>
+
+  <v-form
+    v-else
+    style="padding: 10px;"
+    ref="form"
+    lazy-validation
+  >
+    <v-text-field
+      v-model="register.fullName"
+      label="Full name"
+      required
+    ></v-text-field>
+
+    <v-text-field
+      v-model="register.username"
+      label="User name"
+      required
+    ></v-text-field>
+
+    <v-text-field
+      v-model="register.phoneNumber"
+      label="Phone"
+      required
+    ></v-text-field>
+    
+      <!-- :rules="emailRules" -->
+    <v-text-field
+      v-model="register.email"
+      label="E-mail"
+      required
+    ></v-text-field>
+
+    <v-text-field
+      v-model="register.password"
+      type="password"
+      label="Password"
+      required
+    ></v-text-field>
+
+    <v-card-actions style="display: flex;justify-content: center;">
+    <v-btn
+      color="success"
+      class="mr-4"
+      style="margin-right: 10px; color: #59b4d1;"
+    >
+      Confirm
+    </v-btn>
+
+    <v-btn @click="changeForm('LOGIN')">
+      Login
+    </v-btn>
     </v-card-actions>
   </v-form>
   </v-card>
@@ -66,7 +115,30 @@
 
 <script>
     export default {
-        
+        data() {
+          return {
+            login: {
+              email: "",
+              password: "",
+            },
+            loading: false,
+            checkForm: true,
+            register: {
+              fullName: "",
+              username:"",
+              phoneNumber:"",
+              email: "",
+              password: "",
+            },
+            change: 0
+          }
+        },
+        methods: {
+          changeForm(name) {
+            if (name == 'LOGIN') this.checkForm = true
+            else this.checkForm = false
+          }
+        },
     }
 </script>
 

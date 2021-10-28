@@ -6,7 +6,7 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/chat',
     component: layout,
     children: [
       {
@@ -17,7 +17,7 @@ const routes = [
     ]
   },
   {
-    path: '/login',
+    path: '/',
     name: 'Login',
     component: () => import('@/components/Login')
   }
