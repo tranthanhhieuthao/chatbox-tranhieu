@@ -27,11 +27,11 @@
     ref="form"
     lazy-validation
   >
-    
+
       <!-- :rules="emailRules" -->
     <v-text-field
-      v-model="login.email"
-      label="E-mail"
+      v-model="login.username"
+      label="User name"
       required
     ></v-text-field>
 
@@ -47,6 +47,7 @@
       color="success"
       class="mr-4"
       style="margin-right: 10px; color: #59b4d1;"
+      @click="loginChat()"
     >
       Submit
     </v-btn>
@@ -64,32 +65,38 @@
     lazy-validation
   >
     <v-text-field
-      v-model="register.fullName"
+      v-model="registerForm.fullName"
       label="Full name"
       required
     ></v-text-field>
 
     <v-text-field
-      v-model="register.username"
+      v-model="registerForm.username"
       label="User name"
       required
     ></v-text-field>
 
     <v-text-field
-      v-model="register.phoneNumber"
+            v-model="registerForm.sex"
+            label="Sex"
+            required
+    ></v-text-field>
+
+    <v-text-field
+      v-model="registerForm.phoneNumber"
       label="Phone"
       required
     ></v-text-field>
-    
+
       <!-- :rules="emailRules" -->
     <v-text-field
-      v-model="register.email"
+      v-model="registerForm.gmail"
       label="E-mail"
       required
     ></v-text-field>
 
     <v-text-field
-      v-model="register.password"
+      v-model="registerForm.password"
       type="password"
       label="Password"
       required
@@ -100,6 +107,7 @@
       color="success"
       class="mr-4"
       style="margin-right: 10px; color: #59b4d1;"
+      @click="registerChat()"
     >
       Confirm
     </v-btn>
@@ -118,17 +126,18 @@
         data() {
           return {
             login: {
-              email: "",
+              gmail: "",
               password: "",
             },
             loading: false,
             checkForm: true,
-            register: {
+            registerForm: {
               fullName: "",
               username:"",
               phoneNumber:"",
-              email: "",
+              gmail: "",
               password: "",
+              sex: ""
             },
             change: 0
           }
@@ -137,8 +146,48 @@
           changeForm(name) {
             if (name == 'LOGIN') this.checkForm = true
             else this.checkForm = false
+
+          },
+          async loginChat() {
+            let res = await this.$store.dispatch('groupChatAPI/login', this.login)
+            if (res.status === 'SUCCESS') {
+              this.$notify({
+                title: 'Success',
+                message: 'Login success',
+                type: 'success',
+                position: 'bottom-right'
+              })
+              localStorage.setItem("username", this.login.username)
+              this.$router.push("/chat")
+            } else {
+              this.$notify({
+                title: 'Fail',
+                message: 'Login fail',
+                type: 'error',
+                position: 'bottom-right'
+              })
+            }
+          },
+          async registerChat() {
+            let res = await this.$store.dispatch('groupChatAPI/register', this.registerForm)
+            if (res.status === 'SUCCESS') {
+              this.$notify({
+                title: 'Success',
+                message: 'Register success',
+                type: 'success',
+                position: 'bottom-right'
+              })
+            } else {
+              this.$notify({
+                title: 'Fail',
+                message: 'Register fail',
+                type: 'error',
+                position: 'bottom-right'
+              })
+            }
           }
-        },
+        }
+
     }
 </script>
 

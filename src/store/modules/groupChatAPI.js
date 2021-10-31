@@ -1,16 +1,15 @@
+
 import request from "../../Request/request"
 
 const state = {
   }
-  
+
   const mutations = {
   }
-  
+
   const actions = {
-    dataUserCurrent({commit}, data) {
-      commit('DATA_USER_CURRENT', data)
-    },
-    login({ commit }, data)  {
+      // eslint-disable-next-line no-empty-pattern
+    login({},data)  {
         return new Promise ((resolve, reject) => {
             return request ({
                 url: `/login`,
@@ -19,14 +18,74 @@ const state = {
             }).then( res => resolve(res))
             .catch( error => reject(error))
         })
-    }
+    },
+      // eslint-disable-next-line no-empty-pattern
+    register({},data) {
+      return new Promise ((resolve, reject) => {
+        return request ({
+          url: 'register',
+          method: 'post',
+          data
+        }).then( res => resolve(res))
+        .catch(er => reject(er))
+      })
+    },
+      // eslint-disable-next-line no-empty-pattern
+      createGroup({}, data) {
+          return new Promise ((resolve, reject) => {
+              return request ({
+                  url: 'createGroup',
+                  method: 'post',
+                  data
+              }).then( res => resolve(res))
+                  .catch(er => reject(er))
+          })
+      },
+      // eslint-disable-next-line no-empty-pattern
+      groupsUser({}, username) {
+          return new Promise ((resolve, reject) => {
+              return request ({
+                  url: `groups/?username=${username}`,
+                  method: 'get'
+              }).then( res => resolve(res))
+                  .catch(er => reject(er))
+          })
+      },
+      // eslint-disable-next-line no-empty-pattern
+      addUserIntoGroup({}, username) {
+          return new Promise ((resolve, reject) => {
+              return request ({
+                  url: `groups/?username=${username}`,
+                  method: 'get'
+              }).then( res => resolve(res))
+                  .catch(er => reject(er))
+          })
+      },
+      // eslint-disable-next-line no-empty-pattern
+      usersInGroup({}, id) {
+          return new Promise ((resolve, reject) => {
+              return request ({
+                  url: `usersInGroup/?idGroup=${id}`,
+                  method: 'get'
+              }).then( res => resolve(res))
+                  .catch(er => reject(er))
+          })
+      },
+      // eslint-disable-next-line no-empty-pattern
+      findUser({}, username) {
+          return new Promise ((resolve, reject) => {
+              return request ({
+                  url: `searchUser/?username=${username}`,
+                  method: 'get'
+              }).then( res => resolve(res))
+                  .catch(er => reject(er))
+          })
+      }
   }
-  
+
   export default {
     namespaced: true,
     state,
     mutations,
     actions
   }
-  
-  

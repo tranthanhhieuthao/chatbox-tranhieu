@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const service = axios.create({
     timeout: 300000,
-    baseURL: 'http://localhost:8081/api/v1'
+    baseURL: 'http://localhost:8081/api/'
 })
 
 service.interceptors.request.use(
@@ -18,12 +18,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     response => {
       const res = response.data
-      if (res.message === 'SUCCESS') {
-        console.log('tranhieu', res)
-        return res
-      } else {
-        return Promise.reject(new Error(res.message || 'ERROR'))
-      }
+      return res
     },
     error => {
       return Promise.reject(error)
