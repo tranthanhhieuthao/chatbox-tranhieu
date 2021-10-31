@@ -157,8 +157,9 @@
                 type: 'success',
                 position: 'bottom-right'
               })
+              this.$store.dispatch("app/dataUserCurrent", this.login.username)
               localStorage.setItem("username", this.login.username)
-              this.$router.push("/chat")
+              this.$router.replace("/home")
             } else {
               this.$notify({
                 title: 'Fail',

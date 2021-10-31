@@ -10,7 +10,7 @@ const routes = [
     component: layout,
     children: [
       {
-        path: '/chat',
+        path: `/chat/:id`,
         name: 'chat',
         component: () => import('@/components/ScreenChat')
       }
@@ -20,6 +20,17 @@ const routes = [
     path: '/',
     name: 'Login',
     component: () => import('@/components/Login')
+  },
+  {
+    path: '/home',
+    component: layout,
+    children: [
+      {
+        path: '/home',
+        name: 'home',
+        component: () => import('@/components/Home')
+      }
+    ]
   }
   // {
   //   path: '/showUser',

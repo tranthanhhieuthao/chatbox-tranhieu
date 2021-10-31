@@ -45,7 +45,7 @@ const state = {
       groupsUser({}, username) {
           return new Promise ((resolve, reject) => {
               return request ({
-                  url: `groups/?username=${username}`,
+                  url: `groups?username=${username}`,
                   method: 'get'
               }).then( res => resolve(res))
                   .catch(er => reject(er))
@@ -55,7 +55,7 @@ const state = {
       addUserIntoGroup({}, username) {
           return new Promise ((resolve, reject) => {
               return request ({
-                  url: `groups/?username=${username}`,
+                  url: `groups?username=${username}`,
                   method: 'get'
               }).then( res => resolve(res))
                   .catch(er => reject(er))
@@ -65,7 +65,7 @@ const state = {
       usersInGroup({}, id) {
           return new Promise ((resolve, reject) => {
               return request ({
-                  url: `usersInGroup/?idGroup=${id}`,
+                  url: `usersInGroup?idGroup=${id}`,
                   method: 'get'
               }).then( res => resolve(res))
                   .catch(er => reject(er))
@@ -75,12 +75,22 @@ const state = {
       findUser({}, username) {
           return new Promise ((resolve, reject) => {
               return request ({
-                  url: `searchUser/?username=${username}`,
+                  url: `searchUser?username=${username}`,
                   method: 'get'
               }).then( res => resolve(res))
                   .catch(er => reject(er))
           })
-      }
+      },
+      // eslint-disable-next-line no-empty-pattern
+      commentsUser({}, data) {
+        return new Promise ((resolve, reject) => {
+            return request ({
+                url: `comments?idGroup=${data.idGroup}&page=${data.page}&size=${data.size}`,
+                method: 'get'
+            }).then( res => resolve(res))
+                .catch(er => reject(er))
+        })
+    }
   }
 
   export default {

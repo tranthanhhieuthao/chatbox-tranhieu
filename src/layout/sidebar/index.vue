@@ -128,6 +128,7 @@
         },
         joinGroup(data) {
           this.$store.dispatch("app/dataGroupChatCurrent", data)
+          this.$router.push("/chat/" + data.id)
         },
         cancelCreate() {
           this.dataGroup = {}

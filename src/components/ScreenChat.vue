@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="wapper">
+    <div class="wapper" :key="contentChatShow">
         <div style="background: #7bb1d9;color: white;display: flex">
         <h3 style="flex: 22;">{{ dataGroupChatCurrent.nameGroup }}</h3>
             <v-btn
@@ -29,17 +29,23 @@
             </v-btn>
         </div>
         <hr />
-        <div id="content-chat">
+        <div id="content-chat" style="overflow-y: auto;">
           <div  v-for="item of listMsg" :key="item.id">
           <v-card
             elevation="2"
             shaped
             style="margin-bottom: 10px;"
           >
-           <div style="font-weight: bold;">{{item.username}}</div>
-           {{item.content}}
+           <div style="font-weight: bold;">{{item.sender}}</div>
+           {{item.comment}}
            </v-card>
+           <div v-if="item.usernameJoin ">
+                    <div>
+                        {{item.usernameJoin}} joined group
+                    </div>
+            </div>
           </div>
+            
         </div>
         <div id="write-message">
             <v-textarea
@@ -196,11 +202,19 @@ export default {
         listUserJoin: [],
         listUserSearch: [],
         dialogAddUser: false,
-        searchName: ""
+        searchName: "",
+        dataCmt: {
+            idGroup: 0,
+            page: 1,
+            size: 1000
+        },
+        contentChatShow: 0,
+        nameJoin: [],
+        checkJoin: false
     }
   },
     computed: {
-        ...mapGetters(['dataGroupChatCurrent'])
+        ...mapGetters(['dataGroupChatCurrent', 'dataUserCurrent'])
         // dataGroup: {
         //     get() {
         //        return this.$store.state.app.dataGroupChatCurrent
@@ -208,14 +222,22 @@ export default {
         // }
     },
     watch: {
-        dataGroupChatCurrent() {
-            this.groupChat.idGroupChat = this.dataGroupChatCurrent.id
-            console.log("lolo", this.dataGroupChatCurrent)
-            this.connect();
+        dataGroupChatCurrent() {    
+            this.groupChat.idGroupChat = this.dataGroupChatCurrent.id 
+            this.username = this.dataUserCurrent
+            this.nameJoin = []
+            console.log("hjihih", this.dataUserCurrent)
+            this.commentsUser() 
+            this.connect();   
+                
         }
     },
   mounted () {
-      this.username = localStorage.getItem("username")
+      this.username = this.dataUserCurrent  
+      console.log("hjihihasdasd", this.dataUserCurrent)
+       this.commentsUser()  
+    //   this.connect();   
+      console.log("mounted", this.listMsg)
   },
   methods: {
    connect() {
@@ -225,24 +247,25 @@ export default {
     },
 
  onConnected() {
+     
     // Subscribe to the Public Topic
-    this.stompClient.subscribe('/topic/' + this.groupChat.idGroupChat , this.onMessageReceived);
+    this.stompClient.subscribe('/topic/' + this.dataGroupChatCurrent.id , this.onMessageReceived);
 
     // Tell your username to the server
     // this.addUserIntoGroup()
     },
       addUserIntoGroup(data) {
           this.groupChat.idUser = data.id
-          this.groupChat.type = "CHAT"
-          this.stompClient.send("/app/chat.addUser/" + this.groupChat.idGroupChat,
+          this.groupChat.type = "JOIN"
+          this.stompClient.send("/app/chat.addUser/" + this.dataGroupChatCurrent.id,
               JSON.stringify(this.groupChat)
           )
       },
 
  contentChat(sender, content) {
    let temp = {
-     username: sender,
-     content: content
+     sender: sender,
+     comment: content
    }
    this.listMsg.push(temp);
    console.log('jiji', this.listMsg)
@@ -253,28 +276,31 @@ export default {
         this.groupChat.sender = this.username
         this.groupChat.type = "CHAT"
         this.groupChat.comment = this.message
-        this.stompClient.send("/app/chat.sendMessage/" +  this.groupChat.idGroupChat, JSON.stringify(this.groupChat));
+        this.stompClient.send("/app/chat.sendMessage/" +  this.dataGroupChatCurrent.id, JSON.stringify(this.groupChat));
         this.message = '';
     }
  },
 
  onMessageReceived(payload) {
     let message = JSON.parse(payload.body);
-    console.log('kkk', message)
-
     if(message.type === 'JOIN') {
-        console.log('JOIN')
+        this.listMsg.push(message)
+        this.checkJoin = true
     } else if (message.type === 'LEAVE') {
         console.log('LEAVE')
-    } else {
+        this.checkJoin = false
+    } else if(message.type === 'CHAT'){
       console.log('vaqo da')
+      this.checkJoin = false
         this.contentChat(message.sender, message.comment);
     }
  },
       async usersInGroup() {
           let res = await this.$store.dispatch('groupChatAPI/usersInGroup', this.groupChat.idGroupChat)
-          this.listUserJoin = res.content
-          this.dialogListUser = true
+          if (res.status === 'SUCCESS') {
+            this.listUserJoin = res.content
+            this.dialogListUser = true
+          }
 
       },
 
@@ -283,13 +309,27 @@ export default {
       },
       async searchUsers() {
           let res = await this.$store.dispatch('groupChatAPI/findUser', this.searchName)
-          this.listUserSearch = res.content
+          if (res.status === 'SUCCESS') {
+            this.listUserSearch = res.content
+          }
       },
       cancelDialogListUser() {
        this.dialogListUser = false
       },
       cancelDialogAddUser() {
        this.dialogAddUser = false
+      },
+      async commentsUser() {
+          this.dataCmt.idGroup = this.dataGroupChatCurrent.id
+           let res = await this.$store.dispatch('groupChatAPI/commentsUser', this.dataCmt)
+           if (res.status === 'SUCCESS') {
+                this.listMsg = res.content.content
+           } else {
+               this.listMsg = []
+           }
+           
+          
+
       }
   }
 }
