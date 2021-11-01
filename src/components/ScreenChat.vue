@@ -1,7 +1,7 @@
 <template>
 <div>
-    <div class="wapper" :key="contentChatShow">
-        <div style="background: #7bb1d9;color: white;display: flex">
+    <div class="wapper" :key="contentChatShow" ref="refContent">
+        <div class="header-chat">
         <h3 style="flex: 22;">{{ dataGroupChatCurrent.nameGroup }}</h3>
             <v-btn
                     class="mx-2"
@@ -29,15 +29,23 @@
             </v-btn>
         </div>
         <hr />
-        <div id="content-chat" style="overflow-y: auto;">
-          <div  v-for="item of listMsg" :key="item.id">
+        <div id="content-chat">
+          <div  v-for="item of listMsg" :key="item.id" style="padding: 0px 10px 0px 10px;">
           <v-card
-            elevation="2"
-            shaped
-            style="margin-bottom: 10px;"
+          v-if="item.sender === username"
+            elevation="4"
+            class="mainChat"
           >
            <div style="font-weight: bold;">{{item.sender}}</div>
-           {{item.comment}}
+           <div class="commentClass">{{item.comment}}</div>
+           </v-card>
+           <v-card
+          v-if="item.sender !== username"
+            elevation="4"
+            class="subChat"
+          >
+           <div style="font-weight: bold;">{{item.sender}}</div>
+           <div class="commentClass">{{item.comment}}</div>
            </v-card>
            <div v-if="item.usernameJoin ">
                     <div>
@@ -215,22 +223,23 @@ export default {
   },
     computed: {
         ...mapGetters(['dataGroupChatCurrent', 'dataUserCurrent'])
-        // dataGroup: {
-        //     get() {
-        //        return this.$store.state.app.dataGroupChatCurrent
-        //     }
-        // }
     },
     watch: {
         dataGroupChatCurrent() {    
             this.nameJoin = []
             this.listMsg = []
             this.message = ''
+            let element = this.$refs['refContent']
+      console.log("lklk", element)
+      element.scrollTop = element.scrollHeight;
             this.init()
                 
         }
     },
   mounted () {
+      let element = this.$refs['refContent']
+      console.log("lklk", element)
+      element.scrollTop = element.scrollHeight;
     this.init()
   },
   methods: {
@@ -246,13 +255,9 @@ export default {
         this.stompClient.connect({}, this.onConnected, () => {console.log('cant connect')})
     },
 
- onConnected() {
-     
+    onConnected() {
     // Subscribe to the Public Topic
     this.stompClient.subscribe('/topic/' + this.dataGroupChatCurrent.id , this.onMessageReceived);
-
-    // Tell your username to the server
-    // this.addUserIntoGroup()
     },
       addUserIntoGroup(data) {
           this.groupChat.idUser = data.id
@@ -286,8 +291,6 @@ export default {
     if(message.type === 'JOIN') {
         this.listMsg.push(message)
         this.checkJoin = true
-        this.$store.dispatch("app/changeDataGroups", Math.random(0,100))
-        console.log("lo", this.$store.state.app.changeDataGroups)
     } else if (message.type === 'LEAVE') {
         console.log('LEAVE')
         this.checkJoin = false
@@ -341,11 +344,45 @@ export default {
 #content-chat {
         height: 650px;
         margin-bottom: 10px;
-        width: 100%;
-        position: relative;
+        margin-top: 50px;
+        overflow: auto;
+       
     }
     .wapper {
       background: rgb(234, 240, 245);
+      overflow: auto;
+    }
+    #write-message {
+        position: absolute;
+        width: 100%;
+    }
+    .header-chat {
+        background: #7bb1d9;
+        color: white;
+        display: flex; 
+        z-index: 1000;
+        width: 100%;
+        position: fixed;
+    }
+    .mainChat {
+        display: grid;
+        justify-content: flex-start;
+        margin-bottom: 10px;
+        background-color: rgb(191, 216, 247);
+        padding: 3px;
+        width: fit-content;
+        left: 85%;
+    }
+    .subChat {
+        display: grid;
+        justify-content: flex-start;
+        margin-bottom: 10px;
+         padding: 3px;
+         width: fit-content;
+    
+    }
+    .commentClass {
+        width: 140px;
     }
 </style>
 

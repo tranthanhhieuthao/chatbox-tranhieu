@@ -23,6 +23,22 @@
           </v-list-item-content>
         </v-list-item>
         <v-list-item>
+          <v-list-item-icon>
+          </v-list-item-icon>
+          <v-btn
+                    class="mx-2"
+                    fab
+                    dark
+                    small
+                    color="primary"
+                    @click="refresh">
+                <v-icon dark>
+                    mdi-refresh
+                </v-icon>
+          </v-btn>
+       
+        </v-list-item>
+        <v-list-item>
           <hr class="new1">
         </v-list-item>
         <v-list-item
@@ -103,16 +119,13 @@ import { mapGetters } from 'vuex'
     computed: {
         ...mapGetters(['changeDataGroups'])
     },
-    watch: {
-       changeDataGroups() {
-         console.log("phai vao")
-         this.groupsUser()
-       }
-    },
       mounted() {
         this.groupsUser();
       },
       methods: {
+        refresh() {
+          this.groupsUser()
+        },
         async createGroup() {
           this.dataGroup.userCreate = localStorage.getItem("username")
           let res = await this.$store.dispatch('groupChatAPI/createGroup', this.dataGroup)
