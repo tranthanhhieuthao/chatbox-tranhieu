@@ -88,7 +88,7 @@
 </template>
 
 <script>
-
+import { mapGetters } from 'vuex'
     export default {
         data: () => ({
       items: [],
@@ -100,6 +100,15 @@
             typeGroup: ""
           }
     }),
+    computed: {
+        ...mapGetters(['changeDataGroups'])
+    },
+    watch: {
+       changeDataGroups() {
+         console.log("phai vao")
+         this.groupsUser()
+       }
+    },
       mounted() {
         this.groupsUser();
       },
@@ -138,12 +147,6 @@
           let username = localStorage.getItem("username")
           let res = await this.$store.dispatch('groupChatAPI/groupsUser', username)
           if (res.status === 'SUCCESS') {
-            this.$notify({
-              title: 'Success',
-              message: 'Create success',
-              type: 'success',
-              position: 'bottom-right'
-            })
             let contentCr = res.content
             this.items = []
             for (let it of contentCr) {
@@ -151,13 +154,6 @@
               this.items.push(it);
             }
             // this.$router.push("/chat")
-          } else {
-            this.$notify({
-              title: 'Fail',
-              message: 'Create fail',
-              type: 'error',
-              position: 'bottom-right'
-            })
           }
           this.dialog = false
         },

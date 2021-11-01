@@ -223,27 +223,27 @@ export default {
     },
     watch: {
         dataGroupChatCurrent() {    
-            this.groupChat.idGroupChat = this.dataGroupChatCurrent.id 
-            this.username = this.dataUserCurrent
             this.nameJoin = []
-            console.log("hjihih", this.dataUserCurrent)
-            this.commentsUser() 
-            this.connect();   
+            this.listMsg = []
+            this.message = ''
+            this.init()
                 
         }
     },
   mounted () {
-      this.username = this.dataUserCurrent  
-      console.log("hjihihasdasd", this.dataUserCurrent)
-       this.commentsUser()  
-    //   this.connect();   
-      console.log("mounted", this.listMsg)
+    this.init()
   },
   methods: {
-   connect() {
-    let socket = new SockJS('http://localhost:8081/ws');
-        this.stompClient = Stomp.over(socket);
-        this.stompClient.connect({}, this.onConnected, () => {console.log('cant connect')});
+    init() {
+        this.groupChat.idGroupChat = this.dataGroupChatCurrent.id 
+        this.username = this.dataUserCurrent  
+        this.commentsUser()
+        this.connect()
+    },
+    connect() {
+    let socket = new SockJS('http://localhost:8081/ws')
+        this.stompClient = Stomp.over(socket)
+        this.stompClient.connect({}, this.onConnected, () => {console.log('cant connect')})
     },
 
  onConnected() {
@@ -268,7 +268,6 @@ export default {
      comment: content
    }
    this.listMsg.push(temp);
-   console.log('jiji', this.listMsg)
  },
 
  sendMessage() {
@@ -283,15 +282,17 @@ export default {
 
  onMessageReceived(payload) {
     let message = JSON.parse(payload.body);
+    console.log("huhu", message)
     if(message.type === 'JOIN') {
         this.listMsg.push(message)
         this.checkJoin = true
+        this.$store.dispatch("app/changeDataGroups", Math.random(0,100))
+        console.log("lo", this.$store.state.app.changeDataGroups)
     } else if (message.type === 'LEAVE') {
         console.log('LEAVE')
         this.checkJoin = false
     } else if(message.type === 'CHAT'){
-      console.log('vaqo da')
-      this.checkJoin = false
+        this.checkJoin = false
         this.contentChat(message.sender, message.comment);
     }
  },

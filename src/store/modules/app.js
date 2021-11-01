@@ -1,7 +1,8 @@
 
 const state = {
   dataUserCurrent: "",
-  dataGroupChatCurrent: {}
+  dataGroupChatCurrent: {},
+  changeDataGroups: 0
 }
 
 const mutations = {
@@ -10,6 +11,9 @@ const mutations = {
   },
   DATA_GROUP_CHAT_CURRENT: (state, data) => {
     state.dataGroupChatCurrent = data
+  },
+  CHANGE_DATA_GROUPS: (state, data) => {
+    state.changeDataGroups = data
   }
 }
 
@@ -19,6 +23,9 @@ const actions = {
   },
   dataGroupChatCurrent({commit}, data) {
     commit('DATA_GROUP_CHAT_CURRENT', data)
+  },
+  changeDataGroups({commit}, data) {
+    commit('CHANGE_DATA_GROUPS', data)
   }
 }
 
