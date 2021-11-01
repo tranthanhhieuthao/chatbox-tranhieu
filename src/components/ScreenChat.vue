@@ -342,27 +342,26 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #content-chat {
-        height: 650px;
+        height: 600px;
         margin-bottom: 10px;
-        margin-top: 50px;
+        margin-top: 20px;
         overflow: auto;
+        padding: auto;
        
     }
     .wapper {
       background: rgb(234, 240, 245);
-      overflow: auto;
+      /* overflow: auto; */
     }
     #write-message {
-        position: absolute;
         width: 100%;
     }
     .header-chat {
         background: #7bb1d9;
         color: white;
         display: flex; 
-        z-index: 1000;
+        /* z-index: 1000; */
         width: 100%;
-        position: fixed;
     }
     .mainChat {
         display: grid;
@@ -379,6 +378,7 @@ export default {
         margin-bottom: 10px;
          padding: 3px;
          width: fit-content;
+        left: 4%;
     
     }
     .commentClass {
