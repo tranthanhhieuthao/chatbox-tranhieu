@@ -31,20 +31,28 @@
         <hr />
         <div id="content-chat">
           <div  v-for="item of listMsg" :key="item.id" style="padding: 0px 10px 0px 10px;">
+              
           <v-card
           v-if="item.sender === username"
             elevation="4"
             class="mainChat"
           >
-           <div style="font-weight: bold;">{{item.sender}}</div>
+            <v-list-item-avatar>
+                <img src="https://cdn.vuetifyjs.com/images/lists/1.jpg">
+            </v-list-item-avatar>
+           <div style="font-weight: bold;">{{item.sender}}, {{item.timeCreateFormat}}</div>
            <div class="commentClass">{{item.comment}}</div>
            </v-card>
+           
            <v-card
           v-if="item.sender !== username"
             elevation="4"
             class="subChat"
           >
-           <div style="font-weight: bold;">{{item.sender}}</div>
+          <v-list-item-avatar>
+                <img src="https://cdn.vuetifyjs.com/images/lists/2.jpg">
+            </v-list-item-avatar>
+           <div style="font-weight: bold;">{{item.sender}}, {{item.timeCreateFormat}}</div>
            <div class="commentClass">{{item.comment}}</div>
            </v-card>
            <div v-if="item.usernameJoin ">
@@ -273,6 +281,9 @@ export default {
      comment: content
    }
    this.listMsg.push(temp);
+    this.listMsg.forEach(e => {
+        e.timeCreateFormat = this.formatTimeChat(e.timeCreate)
+    })
  },
 
  sendMessage() {
@@ -323,6 +334,13 @@ export default {
       cancelDialogAddUser() {
        this.dialogAddUser = false
       },
+      formatTimeChat(time) {
+          let temp = new Date(time)
+          let check = ""
+          if (temp.getHours() > 12) check = "PM"
+          else check = "AM"
+        return temp.getHours() + ":" + temp.getMinutes() + ' '+check
+      },
       async commentsUser() {
           this.dataCmt.idGroup = this.dataGroupChatCurrent.id
            let res = await this.$store.dispatch('groupChatAPI/commentsUser', this.dataCmt)
@@ -331,6 +349,9 @@ export default {
            } else {
                this.listMsg = []
            }
+           this.listMsg.forEach(e => {
+            e.timeCreateFormat = this.formatTimeChat(e.timeCreate)
+            })
            
           
 
@@ -382,7 +403,7 @@ export default {
     
     }
     .commentClass {
-        width: 140px;
+        width: 150px;
     }
 </style>
 

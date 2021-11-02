@@ -2,7 +2,7 @@
     <div>
         <v-app>
         <v-navigation-drawer
-            style="margin-top: 130px;"
+            style="top: 15%;"
             app
             permanent
             class="blue-grey lighten-5"
