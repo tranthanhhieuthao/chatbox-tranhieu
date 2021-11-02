@@ -275,12 +275,8 @@ export default {
           )
       },
 
- contentChat(sender, content) {
-   let temp = {
-     sender: sender,
-     comment: content
-   }
-   this.listMsg.push(temp);
+ contentChat(msg) {
+   this.listMsg.push(msg);
     this.listMsg.forEach(e => {
         e.timeCreateFormat = this.formatTimeChat(e.timeCreate)
     })
@@ -307,7 +303,7 @@ export default {
         this.checkJoin = false
     } else if(message.type === 'CHAT'){
         this.checkJoin = false
-        this.contentChat(message.sender, message.comment);
+        this.contentChat(message);
     }
  },
       async usersInGroup() {
