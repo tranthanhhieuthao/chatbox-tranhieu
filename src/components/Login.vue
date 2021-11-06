@@ -158,7 +158,7 @@
                 position: 'bottom-right'
               })
               this.$store.dispatch("app/dataUserCurrent", this.login.username)
-              localStorage.setItem("username", this.login.username)
+              sessionStorage.setItem("username", this.login.username)
               this.$router.replace("/home")
             } else {
               this.$notify({

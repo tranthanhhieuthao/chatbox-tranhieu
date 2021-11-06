@@ -72,10 +72,10 @@ const state = {
           })
       },
       // eslint-disable-next-line no-empty-pattern
-      findUser({}, username) {
+      findUser({}, data) {
           return new Promise ((resolve, reject) => {
               return request ({
-                  url: `searchUser?username=${username}`,
+                  url: `searchUser?username=${data.username}&page=${data.page}&size=${data.size}`,
                   method: 'get'
               }).then( res => resolve(res))
                   .catch(er => reject(er))

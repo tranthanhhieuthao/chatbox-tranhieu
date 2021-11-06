@@ -2,7 +2,7 @@
 <div>
     <div class="wapper" :key="contentChatShow" ref="refContent">
         <div class="header-chat">
-        <h3 style="flex: 22;">{{ dataGroupChatCurrent.nameGroup }}</h3>
+        <h3 style="flex: 22;">{{ nameGroupCurrent }}</h3>
             <v-btn
                     class="mx-2"
                     fab
@@ -133,7 +133,7 @@
 
 
             <form style="padding: 10px;">
-                <v-text-field v-model="searchName"></v-text-field>
+                <v-text-field v-model="dataSearch.username"></v-text-field>
                 <v-btn
                         class="mr-4"
                         @click="searchUsers"
@@ -218,7 +218,11 @@ export default {
         listUserJoin: [],
         listUserSearch: [],
         dialogAddUser: false,
-        searchName: "",
+        dataSearch: {
+            username: "",
+            page: 1,
+            size: 1000
+          },
         dataCmt: {
             idGroup: 0,
             page: 1,
@@ -226,7 +230,8 @@ export default {
         },
         contentChatShow: 0,
         nameJoin: [],
-        checkJoin: false
+        checkJoin: false,
+        nameGroupCurrent: ""
     }
   },
     computed: {
@@ -237,23 +242,25 @@ export default {
             this.nameJoin = []
             this.listMsg = []
             this.message = ''
-            let element = this.$refs['refContent']
-      console.log("lklk", element)
-      element.scrollTop = element.scrollHeight;
             this.init()
+            this.scrollBot()
                 
         }
     },
   mounted () {
-      let element = this.$refs['refContent']
-      console.log("lklk", element)
-      element.scrollTop = element.scrollHeight;
-    this.init()
+        this.init()
+        this.scrollBot()
   },
   methods: {
+      scrollBot() {
+          let element = this.$refs['refContent']
+            element.scrollTop = 738
+            window.scrollY = 700
+      },
     init() {
-        this.groupChat.idGroupChat = this.dataGroupChatCurrent.id 
-        this.username = this.dataUserCurrent  
+        this.nameGroupCurrent = this.dataGroupChatCurrent.nameGroup || sessionStorage.getItem("nameGroundCurrent")
+        this.groupChat.idGroupChat = this.dataGroupChatCurrent.id  || sessionStorage.getItem("idGroundCurrent")
+        this.username = this.dataUserCurrent  || sessionStorage.getItem("username")
         this.commentsUser()
         this.connect()
     },
@@ -265,12 +272,12 @@ export default {
 
     onConnected() {
     // Subscribe to the Public Topic
-    this.stompClient.subscribe('/topic/' + this.dataGroupChatCurrent.id , this.onMessageReceived);
+    this.stompClient.subscribe('/topic/' + this.groupChat.idGroupChat , this.onMessageReceived);
     },
       addUserIntoGroup(data) {
           this.groupChat.idUser = data.id
           this.groupChat.type = "JOIN"
-          this.stompClient.send("/app/chat.addUser/" + this.dataGroupChatCurrent.id,
+          this.stompClient.send("/app/chat.addUser/" + this.groupChat.idGroupChat,
               JSON.stringify(this.groupChat)
           )
       },
@@ -287,7 +294,7 @@ export default {
         this.groupChat.sender = this.username
         this.groupChat.type = "CHAT"
         this.groupChat.comment = this.message
-        this.stompClient.send("/app/chat.sendMessage/" +  this.dataGroupChatCurrent.id, JSON.stringify(this.groupChat));
+        this.stompClient.send("/app/chat.sendMessage/" +  this.groupChat.idGroupChat, JSON.stringify(this.groupChat));
         this.message = '';
     }
  },
@@ -298,6 +305,7 @@ export default {
     if(message.type === 'JOIN') {
         this.listMsg.push(message)
         this.checkJoin = true
+        this.$store.dispatch("app/changeDataGroups", Math.random(0,100))
     } else if (message.type === 'LEAVE') {
         console.log('LEAVE')
         this.checkJoin = false
@@ -319,9 +327,9 @@ export default {
           this.dialogAddUser = true
       },
       async searchUsers() {
-          let res = await this.$store.dispatch('groupChatAPI/findUser', this.searchName)
+          let res = await this.$store.dispatch('groupChatAPI/findUser', this.dataSearch)
           if (res.status === 'SUCCESS') {
-            this.listUserSearch = res.content
+            this.listUserSearch = res.content.content
           }
       },
       cancelDialogListUser() {
@@ -338,7 +346,7 @@ export default {
         return temp.getHours() + ":" + temp.getMinutes() + ' '+check
       },
       async commentsUser() {
-          this.dataCmt.idGroup = this.dataGroupChatCurrent.id
+          this.dataCmt.idGroup = this.groupChat.idGroupChat
            let res = await this.$store.dispatch('groupChatAPI/commentsUser', this.dataCmt)
            if (res.status === 'SUCCESS') {
                 this.listMsg = res.content.content
@@ -368,7 +376,7 @@ export default {
     }
     .wapper {
       background: rgb(234, 240, 245);
-      /* overflow: auto; */
+      overflow: auto;
     }
     #write-message {
         width: 100%;

@@ -17,7 +17,7 @@
 
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
-      <v-app-bar-title>Wellcome Chatbox</v-app-bar-title>
+      <!-- <v-app-bar-title>Wellcome Chatbox</v-app-bar-title> -->
 
       <v-spacer></v-spacer>
 
