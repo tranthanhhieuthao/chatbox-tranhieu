@@ -325,7 +325,7 @@ import { mapGetters } from 'vuex'
 
       },
         async createGroup() {
-          this.dataGroup.userCreate = localStorage.getItem("username")
+          this.dataGroup.userCreate = sessionStorage.getItem("username")
           let res = await this.$store.dispatch('groupChatAPI/createGroup', this.dataGroup)
           if (res.status === 'SUCCESS') {
             this.$notify({
