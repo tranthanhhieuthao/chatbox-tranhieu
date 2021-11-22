@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const service = axios.create({
     timeout: 300000,
-    baseURL: 'http://localhost:8081/api/'
+    baseURL: process.env.VUE_APP_BASE_URL 
 })
 
 service.interceptors.request.use(
