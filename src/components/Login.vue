@@ -162,7 +162,7 @@
               this.$router.replace("/home")
             } else {
               this.$notify({
-                title: 'Fail',
+                title: 'LOGIN FAIL CAUSE USER ' + res.status,
                 message: 'Login fail',
                 type: 'error',
                 position: 'bottom-right'
@@ -180,7 +180,7 @@
               })
             } else {
               this.$notify({
-                title: 'Fail',
+                title: 'Register Fail cause ' + res.status,
                 message: 'Register fail',
                 type: 'error',
                 position: 'bottom-right'

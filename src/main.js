@@ -11,5 +11,8 @@ new Vue({
   router,
   store,
   vuetify,
+  components: {
+    Notifications
+},
   render: h => h(App)
 }).$mount('#app')

@@ -33,7 +33,7 @@
           <div  v-for="item of listMsg" :key="item.id" style="padding: 0px 10px 0px 10px;">
               
           <v-card
-          v-if="item.sender === username"
+            v-if="item.sender === username && item.usernameJoin === ''"
             elevation="4"
             class="mainChat"
           >
@@ -45,7 +45,7 @@
            </v-card>
            
            <v-card
-          v-if="item.sender !== username"
+            v-if="item.sender !== username && item.usernameJoin === ''"
             elevation="4"
             class="subChat"
           >
@@ -311,6 +311,7 @@ export default {
         this.checkJoin = false
     } else if(message.type === 'CHAT'){
         this.checkJoin = false
+        message.usernameJoin = ""
         this.contentChat(message);
     }
  },
