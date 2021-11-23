@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="wapper" :key="contentChatShow" ref="refContent">
+    <div class="wapper" :key="contentChatShow" >
         <div class="header-chat">
         <h3 style="flex: 22;">{{ nameGroupCurrent }}</h3>
             <v-btn
@@ -29,7 +29,7 @@
             </v-btn>
         </div>
         <hr />
-        <div id="content-chat">
+        <div id="content-chat" ref="refContent">
           <div  v-for="item of listMsg" :key="item.id" style="padding: 0px 10px 0px 10px;">
               
           <v-card
@@ -243,19 +243,28 @@ export default {
             this.listMsg = []
             this.message = ''
             this.init()
-            this.scrollBot()
+        
                 
         }
     },
   mounted () {
         this.init()
-        this.scrollBot()
+       
   },
   methods: {
       scrollBot() {
-          let element = this.$refs['refContent']
-            element.scrollTop = 738
-            window.scrollY = 700
+        //   setTimeout(() => {
+        //      let element = this.$refs['refContent']
+        //     element.scrollTop = element.scrollHeight; 
+        //     console.log("top", element.scrollTop)
+        // console.log("height", element.scrollHeight)
+        //   }, 500);
+         window.onload = () => {
+             let element = this.$refs['refContent']
+            element.scrollTop = element.scrollHeight; 
+            console.log("top", element.scrollTop)
+        console.log("height", element.scrollHeight)
+         }
       },
     init() {
         this.nameGroupCurrent = this.dataGroupChatCurrent.nameGroup || sessionStorage.getItem("nameGroundCurrent")
@@ -263,11 +272,14 @@ export default {
         this.username = this.dataUserCurrent  || sessionStorage.getItem("username")
         this.commentsUser()
         this.connect()
+        this.scrollBot()
     },
     connect() {
     let socket = new SockJS(process.env.VUE_APP_WEBSOCKET)
         this.stompClient = Stomp.over(socket)
+        this.stompClient.debug = () => {};
         this.stompClient.connect({}, this.onConnected, () => {console.log('cant connect')})
+        
     },
 
     onConnected() {
@@ -357,9 +369,7 @@ export default {
            this.listMsg.forEach(e => {
             e.timeCreateFormat = this.formatTimeChat(e.timeCreate)
             })
-           
-          
-
+            
       }
   }
 }

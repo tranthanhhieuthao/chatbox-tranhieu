@@ -273,6 +273,7 @@ import { mapGetters } from 'vuex'
         connect() {
         let socket = new SockJS(process.env.VUE_APP_WEBSOCKET)
         this.stompClient = Stomp.over(socket)
+        this.stompClient.debug = () => {};
         this.stompClient.connect({}, this.onConnected, () => {console.log('cant connect')})
       },
       onConnected() {
