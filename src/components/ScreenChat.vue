@@ -286,11 +286,13 @@ export default {
           )
       },
 
- contentChat(msg) {
+ async contentChat(msg) {
    this.listMsg.push(msg);
     this.listMsg.forEach(e => {
         e.timeCreateFormat = this.formatTimeChat(e.timeCreate)
     })
+    await this.commentsUser()
+        this.scrollBot()
  },
 
  sendMessage() {
@@ -305,13 +307,11 @@ export default {
 
  onMessageReceived(payload) {
     let message = JSON.parse(payload.body);
-    console.log("huhu", message)
     if(message.type === 'JOIN') {
         this.listMsg.push(message)
         this.checkJoin = true
         this.$store.dispatch("app/changeDataGroups", Math.random(0,100))
     } else if (message.type === 'LEAVE') {
-        console.log('LEAVE')
         this.checkJoin = false
     } else if(message.type === 'CHAT'){
         this.checkJoin = false
