@@ -243,6 +243,7 @@ export default {
             this.listMsg = []
             this.message = ''
             this.init()
+            
         
                 
         }
@@ -253,26 +254,17 @@ export default {
   },
   methods: {
       scrollBot() {
-        //   setTimeout(() => {
-        //      let element = this.$refs['refContent']
-        //     element.scrollTop = element.scrollHeight; 
-        //     console.log("top", element.scrollTop)
-        // console.log("height", element.scrollHeight)
-        //   }, 500);
-         window.onload = () => {
-             let element = this.$refs['refContent']
-            element.scrollTop = element.scrollHeight; 
-            console.log("top", element.scrollTop)
-        console.log("height", element.scrollHeight)
-         }
+        let element = this.$refs['refContent']
+        element.scrollTop = element.scrollHeight; 
       },
-    init() {
+    async init() {
         this.nameGroupCurrent = this.dataGroupChatCurrent.nameGroup || sessionStorage.getItem("nameGroundCurrent")
         this.groupChat.idGroupChat = this.dataGroupChatCurrent.id  || sessionStorage.getItem("idGroundCurrent")
         this.username = this.dataUserCurrent  || sessionStorage.getItem("username")
-        this.commentsUser()
-        this.connect()
+        await this.commentsUser()
         this.scrollBot()
+        this.connect()
+
     },
     connect() {
     let socket = new SockJS(process.env.VUE_APP_WEBSOCKET)
