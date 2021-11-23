@@ -311,7 +311,6 @@ import { mapGetters } from 'vuex'
           let res = await this.$store.dispatch('userAPI/friends', this.dataFriend)
           if (res.status === 'SUCCESS') {
             this.listFriend = res.content.content
-            console.log("xem nao", this.listFriend)
           }
        },
       cancelAddFriend() {
@@ -347,7 +346,7 @@ import { mapGetters } from 'vuex'
           this.dialog = false
         },
         joinGroup(data) {
-          if (parseInt(data.id) !== parseInt(sessionStorage.getItem("idGroundCurrent"))) {
+          if (parseInt(data.id) !== parseInt(sessionStorage.getItem("idGroundCurrent")) || this.$route.name !== 'chat') {
             sessionStorage.setItem("idGroundCurrent", data.id)
             sessionStorage.setItem("nameGroundCurrent", data.nameGroup)
             this.$store.dispatch("app/dataGroupChatCurrent", data)

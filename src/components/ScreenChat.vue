@@ -33,7 +33,7 @@
           <div  v-for="item of listMsg" :key="item.id" style="padding: 0px 10px 0px 10px;">
               
           <v-card
-            v-if="item.sender === username && item.usernameJoin === ''"
+            v-if="item.sender === username && !item.usernameJoin"
             elevation="4"
             class="mainChat"
           >
@@ -45,7 +45,7 @@
            </v-card>
            
            <v-card
-            v-if="item.sender !== username && item.usernameJoin === ''"
+            v-if="item.sender !== username && !item.usernameJoin"
             elevation="4"
             class="subChat"
           >
