@@ -58,7 +58,6 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log("redirect", sessionStorage.getItem('username'))
   if (sessionStorage.getItem('username') === null && to.path !== '/') next('/')
   else next()
 })

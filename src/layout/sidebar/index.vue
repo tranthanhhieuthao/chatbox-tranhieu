@@ -167,7 +167,7 @@
 
   <v-dialog
           v-model="dialogListFriend"
-          max-width="290"
+          max-width="350"
   >
     <v-card>
       <v-card-title class="text-h5">
@@ -176,6 +176,9 @@
 
       <form style="padding: 10px;" v-for="(item, i) of listFriend" :key="i">
         <v-list-item>
+          <v-list-item-avatar>
+                <img src="https://cdn.vuetifyjs.com/images/lists/1.jpg">
+            </v-list-item-avatar>
           <v-list-item-content>
               <v-list-item-title>{{item.username}}</v-list-item-title>
               <v-list-item-subtitle>{{item.gmail}}</v-list-item-subtitle>
@@ -201,9 +204,14 @@
                   color="primary"
                   @click="chatSingle(item)"
               >
+              <v-badge
+                color="green"
+                dot
+              >
                   <v-icon dark>
                     mdi-wechat
                   </v-icon>
+              </v-badge>
               </v-btn>
           </v-list-item-action-text>
         </v-list-item>
