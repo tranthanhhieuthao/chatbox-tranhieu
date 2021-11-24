@@ -403,7 +403,7 @@ import { mapGetters } from 'vuex'
             for (let it of contentCr) {
               it.icon = 'mdi-plex'
               if (it.typeGroup === 'SINGLE') {
-                it.nameGroupNew = it.nameGroup.split('-').filter(e => e === username)[0]
+                it.nameGroupNew = it.nameGroup.split('-').filter(e => e !== username)[0]
               } else it.nameGroupNew = it.nameGroup
               this.items.push(it);
             }
