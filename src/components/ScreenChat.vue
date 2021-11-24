@@ -2,7 +2,7 @@
 <div>
     <div class="wapper" :key="contentChatShow" >
         <div class="header-chat">
-        <h3 style="flex: 22;">{{ nameGroupCurrent }}</h3>
+        <h3 style="flex: 22;">{{ nameGroupSingleCurrent }}</h3>
             <v-btn
                     class="mx-2"
                     fab
@@ -233,6 +233,7 @@ export default {
         checkJoin: false,
         nameGroupCurrent: "",
         typeRoomCurrent: "",
+        nameGroupSingleCurrent: "",
         userCurrentChatSingle: {}
     }
   },
@@ -261,6 +262,9 @@ export default {
         this.nameGroupCurrent = this.dataGroupChatCurrent.nameGroup || sessionStorage.getItem("nameGroundCurrent")
         this.groupChat.idGroupChat = this.dataGroupChatCurrent.id  || sessionStorage.getItem("idGroundCurrent")
         this.username = this.dataUserCurrent  || sessionStorage.getItem("username")
+        if(this.typeRoomCurrent === 'SINGLE') {
+            this.nameGroupSingleCurrent = this.nameGroupCurrent.split('-').filter(e => e !== this.username)[0]
+        } else this.nameGroupSingleCurrent = this.nameGroupCurrent
         await this.commentsUser()
         this.scrollBot()
         this.connect()
