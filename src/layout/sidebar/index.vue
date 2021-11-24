@@ -52,11 +52,18 @@
           @click="joinGroup(item)"
         >
           <v-list-item-icon  >
-            <v-icon>{{ item.icon }}</v-icon>
+            <v-icon v-if="!item.typeGroup">{{ item.icon }}</v-icon>
+            <v-badge
+            v-if="item.typeGroup"
+                color="green"
+                dot
+              >
+             <v-icon >mdi-account</v-icon>
+            </v-badge>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title >{{ item.nameGroup }}</v-list-item-title>
+            <v-list-item-title >{{ item.nameGroupNew }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -331,22 +338,22 @@ import { mapGetters } from 'vuex'
         this.dialogListFriend = false
       },
       async chatSingle(data) {
-        console.log("hic", data)
             this.dataGroup.limitJoinGroup = 2
-            this.dataGroup.nameGroup = data.username
+            this.dataGroup.nameGroup = sessionStorage.getItem("username")+ '-' + data.username
             this.dataGroup.typeGroup = "SINGLE"
             this.dialogListFriend = false
+            
             this.items.forEach(e => {
-              if(e.typeGroup === "SINGLE" && e.nameGroup === data.username) {
+              if(e.typeGroup === "SINGLE" && e.nameGroup.includes(data.username)) {
                 this.chatSingleStatus = true
                 this.joinGroup(e)
-
+                
               }
             })
             if (!this.chatSingleStatus) {
               await this.createGroup()
               this.items.forEach(e => {
-              if(e.typeGroup === "SINGLE" && e.nameGroup === data.username) {
+              if(e.typeGroup === "SINGLE" && e.nameGroup.includes(data.username)) {
                 this.joinGroup(e)
               }
             })
@@ -395,6 +402,9 @@ import { mapGetters } from 'vuex'
             this.items = []
             for (let it of contentCr) {
               it.icon = 'mdi-plex'
+              if (it.typeGroup === 'SINGLE') {
+                it.nameGroupNew = it.nameGroup.split('-').filter(e => e === username)[0]
+              } else it.nameGroupNew = it.nameGroup
               this.items.push(it);
             }
             // this.$router.push("/chat")

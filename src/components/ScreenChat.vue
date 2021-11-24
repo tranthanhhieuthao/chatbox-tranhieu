@@ -231,7 +231,9 @@ export default {
         contentChatShow: 0,
         nameJoin: [],
         checkJoin: false,
-        nameGroupCurrent: ""
+        nameGroupCurrent: "",
+        typeRoomCurrent: "",
+        userCurrentChatSingle: {}
     }
   },
     computed: {
@@ -255,6 +257,7 @@ export default {
         element.scrollTop = element.scrollHeight; 
       },
     async init() {
+        this.typeRoomCurrent = this.dataGroupChatCurrent.typeGroup
         this.nameGroupCurrent = this.dataGroupChatCurrent.nameGroup || sessionStorage.getItem("nameGroundCurrent")
         this.groupChat.idGroupChat = this.dataGroupChatCurrent.id  || sessionStorage.getItem("idGroundCurrent")
         this.username = this.dataUserCurrent  || sessionStorage.getItem("username")
@@ -276,7 +279,11 @@ export default {
     this.stompClient.subscribe('/topic/' + this.groupChat.idGroupChat , this.onMessageReceived);
     },
       addUserIntoGroup(data) {
-          this.groupChat.idUser = data.id
+          if (this.typeRoomCurrent === 'SINGLE') {
+              this.groupChat.idUser = this.userCurrentChatSingle.id
+          } else {
+              this.groupChat.idUser = data.id
+          }
           this.groupChat.type = "JOIN"
           this.stompClient.send("/app/chat.addUser/" + this.groupChat.idGroupChat,
               JSON.stringify(this.groupChat)
@@ -292,8 +299,12 @@ export default {
         this.scrollBot()
  },
 
- sendMessage() {
+ async sendMessage() {
     if(this.message && this.stompClient) {
+        if (this.typeRoomCurrent === 'SINGLE') {
+            await this.dataUserChatSingle()
+            await this.addUserIntoGroup()
+        }
         this.groupChat.sender = this.username
         this.groupChat.type = "CHAT"
         this.groupChat.comment = this.message
@@ -323,6 +334,13 @@ export default {
             this.dialogListUser = true
           }
 
+      },
+      async dataUserChatSingle() {
+          this.dataSearch.username = this.nameGroupCurrent.split('-')[1]
+          let res = await this.$store.dispatch('groupChatAPI/findUser', this.dataSearch)
+          if (res.status === 'SUCCESS') {
+            this.userCurrentChatSingle = res.content.content[0]
+          }
       },
 
        listUserNeedAdd() {
