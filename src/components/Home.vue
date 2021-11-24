@@ -1,6 +1,9 @@
 <template>
     <div>
-      Home
+      <v-img
+      height="650"
+      src="../assets/cms.jpg"
+    ></v-img>
     </div>
 </template>
 

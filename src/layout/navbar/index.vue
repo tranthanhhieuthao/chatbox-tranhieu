@@ -15,7 +15,10 @@
         ></v-img>
       </template>
 
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+      <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
+      <v-btn icon href="/home">
+      <v-icon>mdi-home</v-icon>
+      </v-btn>
 
       <!-- <v-app-bar-title>Wellcome Chatbox</v-app-bar-title> -->
 
