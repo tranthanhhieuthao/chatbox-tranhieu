@@ -8,6 +8,7 @@ const routes = [
   {
     path: '/chat',
     component: layout,
+    name: 'Chat',
     children: [
       {
         path: `/chat/:id`,
@@ -24,6 +25,7 @@ const routes = [
   {
     path: '/home',
     component: layout,
+    name: 'Home',
     children: [
       {
         path: '/home',
@@ -53,6 +55,12 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  console.log("redirect", sessionStorage.getItem('username'))
+  if (sessionStorage.getItem('username') === null && to.path !== '/') next('/')
+  else next()
 })
 
 export default router
