@@ -262,7 +262,8 @@ import { mapGetters } from 'vuex'
             page: 1,
             size: 1000
           },
-          groupChat: {}
+          groupChat: {},
+          chatSingleStatus: false
     }),
     computed: {
         ...mapGetters(['changeDataGroups'])
@@ -329,7 +330,27 @@ import { mapGetters } from 'vuex'
       cancelListFriend() {
         this.dialogListFriend = false
       },
-      chatSingle() {
+      async chatSingle(data) {
+        console.log("hic", data)
+            this.dataGroup.limitJoinGroup = 2
+            this.dataGroup.nameGroup = data.username
+            this.dataGroup.typeGroup = "SINGLE"
+            this.dialogListFriend = false
+            this.items.forEach(e => {
+              if(e.typeGroup === "SINGLE" && e.nameGroup === data.username) {
+                this.chatSingleStatus = true
+                this.joinGroup(e)
+
+              }
+            })
+            if (!this.chatSingleStatus) {
+              await this.createGroup()
+              this.items.forEach(e => {
+              if(e.typeGroup === "SINGLE" && e.nameGroup === data.username) {
+                this.joinGroup(e)
+              }
+            })
+            }
 
       },
         async createGroup() {
@@ -344,7 +365,7 @@ import { mapGetters } from 'vuex'
             })
             this.groupsUser()
             // this.$router.push("/chat")
-          } else {
+          }  else {
             this.$notify({
               title: 'Fail',
               message: 'Create fail',

@@ -242,10 +242,7 @@ export default {
             this.nameJoin = []
             this.listMsg = []
             this.message = ''
-            this.init()
-            
-        
-                
+            this.init()  
         }
     },
   mounted () {
