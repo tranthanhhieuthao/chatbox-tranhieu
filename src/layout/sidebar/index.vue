@@ -32,7 +32,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item @click.stop="dialogListFriend = true">
+        <v-list-item @click="dialogListUserFunction()">
           <v-list-item-icon>
             <v-icon>mdi-account-multiple</v-icon>
           </v-list-item-icon>
@@ -310,7 +310,6 @@ import { mapGetters } from 'vuex'
           let res = await this.$store.dispatch('userAPI/addFriend', temp)
           if (res.status === 'SUCCESS') {
             this.getListFriend()
-            console.log("ADD FRIEND SUCCESS")
           }
           
         },
@@ -329,6 +328,9 @@ import { mapGetters } from 'vuex'
           if (res.status === 'SUCCESS') {
             this.listFriend = res.content.content
           }
+       },
+       dialogListUserFunction() {
+          this.dialogListFriend = true
        },
       cancelAddFriend() {
         this.dataSearch.username = ""
@@ -358,6 +360,8 @@ import { mapGetters } from 'vuex'
               }
             })
             }
+            this.dataGroup = {}
+            this.dataGroup.typeGroup = ''
 
       },
         async createGroup() {
