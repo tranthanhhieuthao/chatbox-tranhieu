@@ -76,11 +76,19 @@
       required
     ></v-text-field>
 
-    <v-text-field
+    <!-- <v-text-field
             v-model="registerForm.sex"
             label="Sex"
             required
-    ></v-text-field>
+    ></v-text-field> -->
+
+    <v-select
+              v-model="registerForm.sex"
+              :items="items"
+              color="pink"
+              label="Sex"
+              required
+            ></v-select>
 
     <v-text-field
       v-model="registerForm.phoneNumber"
@@ -139,8 +147,21 @@
               password: "",
               sex: ""
             },
-            change: 0
+            change: 0,
+            items: ['Dog', 'Cat', 'Rabbit', 'Turtle', 'Snake']
           }
+        },
+        created() {
+          this.items =[
+              {
+                text: 'Female',
+                value: 'Female'
+              },
+              {
+                text: 'Male',
+                value: 'Male'
+              }
+            ]
         },
         methods: {
           changeForm(name) {
