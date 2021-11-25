@@ -30,6 +30,8 @@ import app from '../App'
     }
 </script>
 
-<style lang="scss" scoped>
-
+<style lang="scss" >
+html {
+    overflow: hidden;
+}
 </style>
