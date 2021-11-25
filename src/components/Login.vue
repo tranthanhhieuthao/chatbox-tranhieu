@@ -44,7 +44,7 @@
 
     <v-card-actions style="display: flex;justify-content: center;">
     <v-btn
-      color="success"
+   
       class="mr-4"
       style="margin-right: 10px; color: #59b4d1;"
       @click="loginChat()"
@@ -117,7 +117,7 @@
 
     <v-card-actions style="display: flex;justify-content: center;">
     <v-btn
-      color="success"
+  
       class="mr-4"
       style="margin-right: 10px; color: #59b4d1;"
       @click="registerChat()"
