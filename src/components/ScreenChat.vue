@@ -299,8 +299,11 @@ export default {
     this.listMsg.forEach(e => {
         e.timeCreateFormat = this.formatTimeChat(e.timeCreate)
     })
-    await this.commentsUser()
+    // await this.commentsUser()
+    setTimeout(() => {
         this.scrollBot()
+    }, 0);
+        
  },
 
  async sendMessage() {
