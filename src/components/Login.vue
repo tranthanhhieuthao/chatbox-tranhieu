@@ -1,5 +1,5 @@
 <template>
-    <div class="wapper" >
+    <div class="wapper">
         <v-card
     :loading="loading"
     class="mx-auto my-12 form-login"
@@ -49,6 +49,11 @@
       style="margin-right: 10px; color: #59b4d1;"
       @click="loginChat()"
     >
+    <v-progress-circular
+      v-if="loadingLogin"
+      indeterminate
+      color="primary"
+    ></v-progress-circular>
       Submit
     </v-btn>
 
@@ -117,6 +122,11 @@
       style="margin-right: 10px; color: #59b4d1;"
       @click="registerChat()"
     >
+    <v-progress-circular
+      v-if="loadingLogin"
+      indeterminate
+      color="primary"
+    ></v-progress-circular>
       Confirm
     </v-btn>
 
@@ -147,6 +157,7 @@
               password: "",
               sex: ""
             },
+            loadingLogin: false,
             change: 0,
             items: ['Dog', 'Cat', 'Rabbit', 'Turtle', 'Snake']
           }
@@ -170,6 +181,7 @@
 
           },
           async loginChat() {
+            this.loadingLogin = true
             let res = await this.$store.dispatch('groupChatAPI/login', this.login)
             if (res.status === 'SUCCESS') {
               this.$notify({
@@ -178,10 +190,12 @@
                 type: 'success',
                 position: 'bottom-right'
               })
+              this.loadingLogin = false
               this.$store.dispatch("app/dataUserCurrent", this.login.username)
               sessionStorage.setItem("username", this.login.username)
               this.$router.replace("/home")
             } else {
+              this.loadingLogin = false
               this.$notify({
                 title: 'LOGIN FAIL CAUSE USER ' + res.status,
                 message: 'Login fail',
@@ -191,6 +205,7 @@
             }
           },
           async registerChat() {
+            this.loadingLogin = true
             let res = await this.$store.dispatch('groupChatAPI/register', this.registerForm)
             if (res.status === 'SUCCESS') {
               this.$notify({
@@ -199,6 +214,7 @@
                 type: 'success',
                 position: 'bottom-right'
               })
+              this.loadingLogin = false
             } else {
               this.$notify({
                 title: 'Register Fail cause ' + res.status,
@@ -206,6 +222,7 @@
                 type: 'error',
                 position: 'bottom-right'
               })
+              this.loadingLogin = false
             }
           }
         }
