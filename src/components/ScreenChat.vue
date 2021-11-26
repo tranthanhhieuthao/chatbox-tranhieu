@@ -249,6 +249,7 @@ export default {
         }
     },
   mounted () {
+    
         this.init()
        
   },
@@ -283,7 +284,7 @@ export default {
     this.stompClient.subscribe('/topic/' + this.groupChat.idGroupChat , this.onMessageReceived);
     },
       addUserIntoGroup(data) {
-          if (this.typeRoomCurrent === 'SINGLE') {
+          if (this.typeRoomCurrent === 'SINGLE' && this.nameGroupCurrent.includes(this.username) && this.listUserJoin.length === 1) {
               this.groupChat.idUser = this.userCurrentChatSingle.id
           } else {
               this.groupChat.idUser = data.id
@@ -308,9 +309,12 @@ export default {
 
  async sendMessage() {
     if(this.message && this.stompClient) {
-        if (this.typeRoomCurrent === 'SINGLE') {
+        if (this.nameGroupCurrent.includes(this.username) && this.typeRoomCurrent === 'SINGLE' && this.listUserJoin.length === 1) {
             await this.dataUserChatSingle()
             await this.addUserIntoGroup()
+            this.typeRoomCurrent = ""
+            this.dataGroupChatCurrent.typeGroup = ""
+            this.$store.dispatch("app/dataGroupChatCurrent", this.dataGroupChatCurrent)
         }
         this.groupChat.sender = this.username
         this.groupChat.type = "CHAT"
