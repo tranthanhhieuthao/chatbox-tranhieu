@@ -234,7 +234,8 @@ export default {
         nameGroupCurrent: "",
         typeRoomCurrent: "",
         nameGroupSingleCurrent: "",
-        userCurrentChatSingle: {}
+        userCurrentChatSingle: {},
+        countCmt: 0
     }
   },
     computed: {
@@ -249,14 +250,15 @@ export default {
         }
     },
   mounted () {
-    
         this.init()
-       
   },
+    
   methods: {
       scrollBot() {
         let element = this.$refs['refContent']
-        element.scrollTop = element.scrollHeight; 
+        if (element !== undefined) {
+            element.scrollTop = element.scrollHeight; 
+        }
       },
     async init() {
         this.typeRoomCurrent = this.dataGroupChatCurrent.typeGroup
@@ -276,7 +278,6 @@ export default {
         this.stompClient = Stomp.over(socket)
         this.stompClient.debug = () => {};
         this.stompClient.connect({}, this.onConnected, () => {console.log('cant connect')})
-        
     },
 
     onConnected() {
@@ -308,6 +309,7 @@ export default {
  },
 
  async sendMessage() {
+     this.countCmt = 0
     if(this.message && this.stompClient) {
         if (this.nameGroupCurrent.includes(this.username) && this.typeRoomCurrent === 'SINGLE' && this.listUserJoin.length === 1) {
             await this.dataUserChatSingle()
@@ -325,6 +327,7 @@ export default {
  },
 
  onMessageReceived(payload) {
+     if (this.countCmt === 0) {
     let message = JSON.parse(payload.body);
     if(message.type === 'JOIN') {
         this.listMsg.push(message)
@@ -337,6 +340,8 @@ export default {
         message.usernameJoin = ""
         this.contentChat(message);
     }
+     }
+    this.countCmt++
  },
       async usersInGroup() {
           let res = await this.$store.dispatch('groupChatAPI/usersInGroup', this.groupChat.idGroupChat)
