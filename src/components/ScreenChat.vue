@@ -235,14 +235,14 @@ export default {
         typeRoomCurrent: "",
         nameGroupSingleCurrent: "",
         userCurrentChatSingle: {},
-        countCmt: 0
+        checkConnected: []
     }
   },
     computed: {
         ...mapGetters(['dataGroupChatCurrent', 'dataUserCurrent'])
     },
     watch: {
-        dataGroupChatCurrent() {    
+        dataGroupChatCurrent() {  
             this.nameJoin = []
             this.listMsg = []
             this.message = ''
@@ -270,11 +270,13 @@ export default {
         } else this.nameGroupSingleCurrent = this.nameGroupCurrent
         await this.commentsUser()
         this.scrollBot()
-        this.connect()
-
+        if(this.checkConnected.indexOf(this.groupChat.idGroupChat) < 0) {
+             this.connect()
+        }
     },
     connect() {
-    let socket = new SockJS(process.env.VUE_APP_WEBSOCKET)
+        this.checkConnected.push(this.groupChat.idGroupChat)
+        let socket = new SockJS(process.env.VUE_APP_WEBSOCKET)
         this.stompClient = Stomp.over(socket)
         this.stompClient.debug = () => {};
         this.stompClient.connect({}, this.onConnected, () => {console.log('cant connect')})
@@ -327,7 +329,6 @@ export default {
 
  onMessageReceived(payload) {
     let message = JSON.parse(payload.body);
-    console.log(this.countCmt)
     if(message.type === 'JOIN') {
         this.listMsg.push(message)
         this.checkJoin = true
@@ -335,10 +336,9 @@ export default {
     } else if (message.type === 'LEAVE') {
         this.checkJoin = false
     } else if(message.type === 'CHAT'){
-        this.checkJoin = false
-        message.usernameJoin = ""
-        this.contentChat(message);
-       
+            this.checkJoin = false
+            message.usernameJoin = ""
+            this.contentChat(message);
     }
      
     
