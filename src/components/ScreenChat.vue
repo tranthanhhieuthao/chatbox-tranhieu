@@ -309,7 +309,6 @@ export default {
  },
 
  async sendMessage() {
-     this.countCmt = 0
     if(this.message && this.stompClient) {
         if (this.nameGroupCurrent.includes(this.username) && this.typeRoomCurrent === 'SINGLE' && this.listUserJoin.length === 1) {
             await this.dataUserChatSingle()
@@ -327,8 +326,8 @@ export default {
  },
 
  onMessageReceived(payload) {
-     if (this.countCmt === 0) {
     let message = JSON.parse(payload.body);
+    console.log(this.countCmt)
     if(message.type === 'JOIN') {
         this.listMsg.push(message)
         this.checkJoin = true
@@ -339,9 +338,10 @@ export default {
         this.checkJoin = false
         message.usernameJoin = ""
         this.contentChat(message);
+       
     }
-     }
-    this.countCmt++
+     
+    
  },
       async usersInGroup() {
           let res = await this.$store.dispatch('groupChatAPI/usersInGroup', this.groupChat.idGroupChat)
