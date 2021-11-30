@@ -21,7 +21,7 @@
                     dark
                     small
                     color="pink"
-                    @click="usersInGroup"
+                    @click="openPopupUserInGrp"
             >
                 <v-icon dark>
                     mdi-account-switch
@@ -57,7 +57,7 @@
            </v-card>
            <div v-if="item.usernameJoin ">
                     <div>
-                        {{item.usernameJoin}} joined group
+                        {{item.usernameJoin}} has already joined group
                     </div>
             </div>
           </div>
@@ -239,7 +239,7 @@ export default {
     }
   },
     computed: {
-        ...mapGetters(['dataGroupChatCurrent', 'dataUserCurrent'])
+        ...mapGetters(['dataGroupChatCurrent', 'dataUserCurrent', 'checkMissMessage'])
     },
     watch: {
         dataGroupChatCurrent() {  
@@ -269,6 +269,7 @@ export default {
             this.nameGroupSingleCurrent = this.nameGroupCurrent.split('-').filter(e => e !== this.username)[0]
         } else this.nameGroupSingleCurrent = this.nameGroupCurrent
         await this.commentsUser()
+        this.usersInGroup()
         this.scrollBot()
         if(this.checkConnected.indexOf(this.groupChat.idGroupChat) < 0) {
              this.connect()
@@ -328,7 +329,9 @@ export default {
  },
 
  onMessageReceived(payload) {
-    let message = JSON.parse(payload.body);
+     let checkTrustRoom = parseInt(JSON.parse(payload.body).idGroupChat)
+      let message = JSON.parse(payload.body);
+     if (checkTrustRoom === this.groupChat.idGroupChat) {
     if(message.type === 'JOIN') {
         this.listMsg.push(message)
         this.checkJoin = true
@@ -340,14 +343,27 @@ export default {
             message.usernameJoin = ""
             this.contentChat(message);
     }
+     } else {
+         if(message.type === 'CHAT') {
+             let tempId = []
+             tempId.push(checkTrustRoom)
+             let tempRoom = {
+                 roomId: tempId
+             }
+             this.$store.dispatch("app/checkMissMessage", !this.checkMissMessage)
+             this.$store.dispatch("app/roomSendMessage", tempRoom)
+         }
+     }
      
     
  },
+        openPopupUserInGrp() {
+            this.dialogListUser = true
+        },
       async usersInGroup() {
           let res = await this.$store.dispatch('groupChatAPI/usersInGroup', this.groupChat.idGroupChat)
           if (res.status === 'SUCCESS') {
             this.listUserJoin = res.content
-            this.dialogListUser = true
           }
 
       },

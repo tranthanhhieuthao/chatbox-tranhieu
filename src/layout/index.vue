@@ -32,6 +32,7 @@ import app from '../App'
 
 <style lang="scss" >
 html {
+    height: 100vh;
     overflow: hidden;
 }
 </style>

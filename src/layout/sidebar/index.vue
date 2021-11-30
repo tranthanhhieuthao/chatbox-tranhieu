@@ -1,8 +1,7 @@
 <template>
-  <div>
+  <div >
     <v-card
-    class="mx-auto"
-    height="800"
+    style="height:700px;"
     width="300"
   >
     <v-navigation-drawer
@@ -59,12 +58,15 @@
                 dot
               >
              <v-icon >mdi-account</v-icon>
+             
             </v-badge>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title >{{ item.nameGroupNew }}</v-list-item-title>
+            <v-list-item-title >{{ item.nameGroupNew }} <v-icon v-if="functionCheckMiss(item)">mdi-tooltip-text</v-icon></v-list-item-title>
+            
           </v-list-item-content>
+    
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -270,14 +272,23 @@ import { mapGetters } from 'vuex'
             size: 1000
           },
           groupChat: {},
-          chatSingleStatus: false
+          chatSingleStatus: false,
+          checkMissMsg: false
     }),
     computed: {
-        ...mapGetters(['changeDataGroups'])
+        ...mapGetters(['changeDataGroups', 'checkMissMessage', 'roomSendMessage'])
     },
     watch: {
       changeDataGroups() {
         this.addUserIntoGroup()
+      },
+      checkMissMessage() {
+        console.log("asd",this.roomSendMessage.roomId)
+        if(this.roomSendMessage.roomId.indexOf(parseInt(this.$route.params.id)) < 0) {
+          this.checkMissMsg = true
+        } else {
+          this.checkMissMsg = false
+        }
       }
     },
       mounted() {
@@ -286,6 +297,9 @@ import { mapGetters } from 'vuex'
         this.connect()
       },
       methods: {
+        functionCheckMiss(item) {
+          return this.checkMissMsg && this.roomSendMessage.roomId.indexOf(parseInt(item.id)) >= 0
+        },
         connect() {
         let socket = new SockJS(process.env.VUE_APP_WEBSOCKET)
         this.stompClient = Stomp.over(socket)
@@ -295,6 +309,9 @@ import { mapGetters } from 'vuex'
       onConnected() {
       // Subscribe to the Public Topic
       this.stompClient.subscribe('/topic/group', this.groupsUser);
+      this.items.forEach(e => {
+        this.stompClient.subscribe('/topic/', e.id);
+      })
       },
       addUserIntoGroup() {
           this.groupChat.type = "ADD_GROUP"
@@ -388,6 +405,7 @@ import { mapGetters } from 'vuex'
         },
         joinGroup(data) {
           if (parseInt(data.id) !== parseInt(sessionStorage.getItem("idGroundCurrent")) || this.$route.name !== 'chat') {
+            this.checkMissMsg = false
             sessionStorage.setItem("idGroundCurrent", data.id)
             sessionStorage.setItem("nameGroundCurrent", data.nameGroup)
             this.$store.dispatch("app/dataGroupChatCurrent", data)

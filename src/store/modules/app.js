@@ -2,7 +2,9 @@
 const state = {
   dataUserCurrent: "",
   dataGroupChatCurrent: {},
-  changeDataGroups: 0
+  changeDataGroups: 0,
+  checkMissMessage: false,
+  roomSendMessage: {}
 }
 
 const mutations = {
@@ -14,6 +16,12 @@ const mutations = {
   },
   CHANGE_DATA_GROUPS: (state, data) => {
     state.changeDataGroups = data
+  },
+  CHECK_MISS_MESSAGE: (state, data) => {
+    state.checkMissMessage = data
+  },
+  ROOM_SEND_MESSAGE: (state, data) => {
+    state.roomSendMessage = data
   }
 }
 
@@ -26,6 +34,12 @@ const actions = {
   },
   changeDataGroups({commit}, data) {
     commit('CHANGE_DATA_GROUPS', data)
+  },
+  checkMissMessage({commit}, data) {
+    commit('CHECK_MISS_MESSAGE', data)
+  },
+  roomSendMessage({commit}, data) {
+    commit('ROOM_SEND_MESSAGE', data)
   }
 }
 
