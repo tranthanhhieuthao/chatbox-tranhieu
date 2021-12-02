@@ -497,7 +497,7 @@ export default {
   left: 4%;
 }
 .commentClass {
-  width: 150px;
+  width: 170px;
 }
 .v-application .elevation-4 {
   box-shadow: none !important;
