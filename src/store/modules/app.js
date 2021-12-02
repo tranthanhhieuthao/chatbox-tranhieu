@@ -26,19 +26,19 @@ const mutations = {
 }
 
 const actions = {
-  dataUserCurrent({commit}, data) {
+  dataUserCurrent({ commit }, data) {
     commit('DATA_USER_CURRENT', data)
   },
-  dataGroupChatCurrent({commit}, data) {
+  dataGroupChatCurrent({ commit }, data) {
     commit('DATA_GROUP_CHAT_CURRENT', data)
   },
-  changeDataGroups({commit}, data) {
+  changeDataGroups({ commit }, data) {
     commit('CHANGE_DATA_GROUPS', data)
   },
-  checkMissMessage({commit}, data) {
+  checkMissMessage({ commit }, data) {
     commit('CHECK_MISS_MESSAGE', data)
   },
-  roomSendMessage({commit}, data) {
+  roomSendMessage({ commit }, data) {
     commit('ROOM_SEND_MESSAGE', data)
   }
 }

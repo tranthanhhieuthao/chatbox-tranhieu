@@ -1,5 +1,5 @@
 <template>
-    <div>
+  <div>
     <v-app-bar
       absolute
       color="#fcb69f"
@@ -17,7 +17,7 @@
 
       <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
       <v-btn icon href="/home">
-      <v-icon>mdi-home</v-icon>
+        <v-icon>mdi-home</v-icon>
       </v-btn>
 
       <!-- <v-app-bar-title>Wellcome Chatbox</v-app-bar-title> -->
@@ -40,21 +40,20 @@
 </template>
 
 <script>
-    export default {
-        data() {
-          return {
-            key: 0
-          }
-        },
-        methods: {
-          logout() {
-            sessionStorage.clear()
-            this.$router.replace('/')
-          }
-        },
-    }
+export default {
+  data() {
+    return {
+      key: 0,
+    };
+  },
+  methods: {
+    logout() {
+      sessionStorage.clear();
+      this.$router.replace("/");
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-
 </style>

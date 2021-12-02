@@ -13,6 +13,6 @@ new Vue({
   vuetify,
   components: {
     Notifications
-},
+  },
   render: h => h(App)
 }).$mount('#app')
