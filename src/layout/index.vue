@@ -4,7 +4,6 @@
       <v-navigation-drawer 
       app
       permanent
-      expand-on-hover
       >
         <sidebar />
       </v-navigation-drawer>
