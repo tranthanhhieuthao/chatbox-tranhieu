@@ -500,7 +500,7 @@ export default {
   width: 170px;
 }
 .v-application .elevation-4 {
-  box-shadow: none;
+  box-shadow: none !important;
 }
 </style>
 
