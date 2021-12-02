@@ -36,12 +36,14 @@
             elevation="4"
             class="mainChat"
           >
+          <span v-if="item.commentFirst === 'FIRST'">
             <v-list-item-avatar>
               <img src="https://cdn.vuetifyjs.com/images/lists/1.jpg" />
             </v-list-item-avatar>
             <div style="font-weight: bold">
               {{ item.sender }}, {{ item.timeCreateFormat }}
             </div>
+          </span>
             <div class="commentClass">{{ item.comment }}</div>
           </v-card>
 
@@ -50,12 +52,14 @@
             elevation="4"
             class="subChat"
           >
-            <v-list-item-avatar>
+          <span v-if="item.commentFirst === 'FIRST'">
+            <v-list-item-avatar >
               <img src="https://cdn.vuetifyjs.com/images/lists/2.jpg" />
             </v-list-item-avatar>
             <div style="font-weight: bold">
               {{ item.sender }}, {{ item.timeCreateFormat }}
             </div>
+          </span>
             <div class="commentClass">{{ item.comment }}</div>
           </v-card>
           <div v-if="item.usernameJoin">
@@ -201,6 +205,8 @@ export default {
       nameGroupSingleCurrent: "",
       userCurrentChatSingle: {},
       checkConnected: [],
+      countCheckMgsOfUser: 0,
+      currentUserChating: ""
     };
   },
   computed: {
@@ -209,12 +215,15 @@ export default {
       "dataUserCurrent",
       "checkMissMessage",
     ]),
+
   },
   watch: {
     dataGroupChatCurrent() {
       this.nameJoin = [];
       this.listMsg = [];
       this.message = "";
+      this.countCheckMgsOfUser = 0;
+      this.currentUserChating = "";
       this.init();
     },
   },
@@ -223,6 +232,16 @@ export default {
   },
 
   methods: {
+
+    checkMessageOfUser(data) {
+      if (this.countCheckMgsOfUser === 0 || this.currentUserChating !== data.sender) {
+        this.currentUserChating = data.sender
+        this.countCheckMgsOfUser = 1
+        return true
+      }
+      return false
+    },
+
     scrollBot() {
       let element = this.$refs["refContent"];
       if (element !== undefined) {
@@ -288,6 +307,9 @@ export default {
     async contentChat(msg) {
       this.listMsg.push(msg);
       this.listMsg.forEach((e) => {
+        if(this.checkMessageOfUser(e)) {
+          e.commentFirst = 'FIRST'
+        }
         e.timeCreateFormat = this.formatTimeChat(e.timeCreate);
       });
       // await this.commentsUser()
@@ -410,6 +432,9 @@ export default {
         this.listMsg = [];
       }
       this.listMsg.forEach((e) => {
+        if(this.checkMessageOfUser(e)) {
+          e.commentFirst = 'FIRST'
+        }
         e.timeCreateFormat = this.formatTimeChat(e.timeCreate);
       });
     },
@@ -443,7 +468,7 @@ export default {
 .mainChat {
   display: grid;
   justify-content: flex-start;
-  margin-bottom: 10px;
+  margin-bottom: 3px;
   background-color: rgb(191, 216, 247);
   padding: 3px;
   width: fit-content;
@@ -452,7 +477,7 @@ export default {
 .subChat {
   display: grid;
   justify-content: flex-start;
-  margin-bottom: 10px;
+  margin-bottom: 3px;
   padding: 3px;
   width: fit-content;
   left: 4%;
