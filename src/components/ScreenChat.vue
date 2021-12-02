@@ -31,12 +31,7 @@
           :key="item.id"
           style="padding: 0px 10px 0px 10px"
         >
-          <v-card
-            v-if="item.sender === username && !item.usernameJoin"
-            elevation="4"
-            class="mainChat"
-          >
-          <span v-if="item.commentFirst === 'FIRST'">
+        <span class="main-title-Chat" v-if="item.commentFirst === 'FIRST' && item.sender === username && !item.usernameJoin">
             <v-list-item-avatar>
               <img src="https://cdn.vuetifyjs.com/images/lists/1.jpg" />
             </v-list-item-avatar>
@@ -44,15 +39,15 @@
               {{ item.sender }}, {{ item.timeCreateFormat }}
             </div>
           </span>
+          <v-card
+            v-if="item.sender === username && !item.usernameJoin"
+            elevation="4"
+            class="mainChat"
+          >        
             <div class="commentClass">{{ item.comment }}</div>
           </v-card>
 
-          <v-card
-            v-if="item.sender !== username && !item.usernameJoin"
-            elevation="4"
-            class="subChat"
-          >
-          <span v-if="item.commentFirst === 'FIRST'">
+          <span class="sub-title-Chat" v-if="item.commentFirst === 'FIRST' && item.sender !== username && !item.usernameJoin">
             <v-list-item-avatar >
               <img src="https://cdn.vuetifyjs.com/images/lists/2.jpg" />
             </v-list-item-avatar>
@@ -60,6 +55,12 @@
               {{ item.sender }}, {{ item.timeCreateFormat }}
             </div>
           </span>
+          <v-card
+            v-if="item.sender !== username && !item.usernameJoin"
+            elevation="4"
+            class="subChat"
+          >
+          
             <div class="commentClass">{{ item.comment }}</div>
           </v-card>
           <div v-if="item.usernameJoin">
@@ -474,6 +475,12 @@ export default {
   width: fit-content;
   left: 85%;
 }
+.main-title-Chat {
+  position: relative;
+  margin-bottom: 3px;
+  width: fit-content;
+  left: 85%;
+}
 .subChat {
   display: grid;
   justify-content: flex-start;
@@ -482,8 +489,18 @@ export default {
   width: fit-content;
   left: 4%;
 }
+
+.sub-title-Chat {
+  position: relative;
+  margin-bottom: 3px;
+  width: fit-content;
+  left: 4%;
+}
 .commentClass {
-  width: 150px;
+  width: 170px;
+}
+.v-application .elevation-4 {
+  box-shadow: none;
 }
 </style>
 
