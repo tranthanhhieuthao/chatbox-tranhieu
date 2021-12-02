@@ -1,7 +1,7 @@
 <template>
     <div>
       <v-img
-      height="650"
+      class="img-home"
       src="../assets/cms.jpg"
     ></v-img>
     </div>
@@ -14,5 +14,9 @@
 </script>
 
 <style lang="scss" scoped>
-
+.img-home {
+  object-fit: cover;
+  height: 600px;
+  width: 90%;
+}
 </style>

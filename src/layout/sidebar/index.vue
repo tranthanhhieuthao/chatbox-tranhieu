@@ -1,11 +1,8 @@
 <template>
   <div>
-    <v-card style="height: 700px" width="300">
+    <v-card class="card-wapper" >
       <v-navigation-drawer
-        absolute
         dark
-        src="https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg"
-        permanent
       >
         <v-list>
           <v-list-item @click.stop="dialog = true">
@@ -410,7 +407,12 @@ export default {
 
 <style lang="scss" scoped>
 .new1 {
-  border: 1px solid black;
+  border: 1px solid white;
   width: 100%;
+}
+
+.card-wapper {
+height: 100vh;
+ width:300px;
 }
 </style>

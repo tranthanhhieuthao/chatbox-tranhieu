@@ -9,10 +9,13 @@
         ></v-progress-linear>
       </template>
 
-      <v-img height="250" src="../assets/chat.jpg"></v-img>
+      <v-img src="../assets/chat.jpg"></v-img>
 
-      <v-card-title style="display: flex; justify-content: center"
+      <v-card-title v-if="checkForm" style="display: flex; justify-content: center"
         >LOGIN</v-card-title
+      >
+      <v-card-title v-if="!checkForm" style="display: flex; justify-content: center"
+        >REGISTER</v-card-title
       >
 
       <v-form v-if="checkForm" style="padding: 10px" ref="form" lazy-validation>
@@ -211,7 +214,8 @@ export default {
 <style lang="scss" scoped>
 .wapper {
   background-image: url("../assets/bg3.jpg");
-  height: 100vh;
+  object-fit: cover;
+  height: 100%;
   background-position: center;
   background-size: cover;
   position: relative;

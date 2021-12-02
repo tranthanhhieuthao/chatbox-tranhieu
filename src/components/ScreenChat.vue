@@ -434,7 +434,7 @@ export default {
   width: 100%;
 }
 .header-chat {
-  background: #7bb1d9;
+  background: rgb(83, 83, 83);
   color: white;
   display: flex;
   /* z-index: 1000; */

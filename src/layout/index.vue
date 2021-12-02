@@ -1,17 +1,22 @@
 <template>
   <div>
-    <v-app>
-      <v-navigation-drawer
-        style="top: 15%"
-        app
-        permanent
-        class="blue-grey lighten-5"
+    <v-app class="app-wapper">
+      <v-navigation-drawer 
+      app
+      permanent
+      expand-on-hover
       >
         <sidebar />
       </v-navigation-drawer>
-      <navbar />
-      <v-main style="margin-top: 130px">
-        <v-container>
+
+      <v-app-bar app>
+        <navbar />
+      </v-app-bar>
+
+      <!-- Sizes your content based upon application components -->
+      <v-main style="margin-top: 75px;">
+        <!-- Provides the application the proper gutter -->
+        <v-container fluid>
           <app />
         </v-container>
       </v-main>
@@ -33,8 +38,10 @@ export default {
 </script>
 
 <style lang="scss" >
-html {
-  height: 100vh;
-  overflow: hidden;
+.v-application--wrap {
+    min-height: 100% !important;
 }
+// html {
+//   height: 100vh;
+// }
 </style>
