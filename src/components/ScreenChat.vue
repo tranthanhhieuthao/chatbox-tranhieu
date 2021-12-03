@@ -31,7 +31,20 @@
           :key="item.id"
           style="padding: 0px 10px 0px 10px"
         >
-        <span class="main-title-Chat" v-if="item.commentFirst === 'FIRST' && item.sender === username && !item.usernameJoin">
+          <span v-if="item.checkDateTimeFirst === 'START_TIME'">
+            <div class="break-start-time">
+              <span>{{ item.dateTime }}</span>
+            </div>
+          </span>
+
+          <span
+            class="main-title-Chat"
+            v-if="
+              item.commentFirst === 'FIRST' &&
+              item.sender === username &&
+              !item.usernameJoin
+            "
+          >
             <v-list-item-avatar>
               <img src="https://cdn.vuetifyjs.com/images/lists/1.jpg" />
             </v-list-item-avatar>
@@ -43,12 +56,19 @@
             v-if="item.sender === username && !item.usernameJoin"
             elevation="4"
             class="mainChat"
-          >        
+          >
             <div class="commentClass">{{ item.comment }}</div>
           </v-card>
 
-          <span class="sub-title-Chat" v-if="item.commentFirst === 'FIRST' && item.sender !== username && !item.usernameJoin">
-            <v-list-item-avatar >
+          <span
+            class="sub-title-Chat"
+            v-if="
+              item.commentFirst === 'FIRST' &&
+              item.sender !== username &&
+              !item.usernameJoin
+            "
+          >
+            <v-list-item-avatar>
               <img src="https://cdn.vuetifyjs.com/images/lists/2.jpg" />
             </v-list-item-avatar>
             <div style="font-weight: bold">
@@ -60,7 +80,6 @@
             elevation="4"
             class="subChat"
           >
-          
             <div class="commentClass">{{ item.comment }}</div>
           </v-card>
           <div v-if="item.usernameJoin">
@@ -158,9 +177,6 @@ import Stomp from "webstomp-client";
 import { mapGetters } from "vuex";
 export default {
   name: "HelloWorld",
-  props: {
-    msg: String,
-  },
   data() {
     return {
       stompClient: null,
@@ -207,7 +223,7 @@ export default {
       userCurrentChatSingle: {},
       checkConnected: [],
       countCheckMgsOfUser: 0,
-      currentUserChating: ""
+      currentUserChating: "",
     };
   },
   computed: {
@@ -216,7 +232,6 @@ export default {
       "dataUserCurrent",
       "checkMissMessage",
     ]),
-
   },
   watch: {
     dataGroupChatCurrent() {
@@ -233,14 +248,16 @@ export default {
   },
 
   methods: {
-
     checkMessageOfUser(data) {
-      if (this.countCheckMgsOfUser === 0 || this.currentUserChating !== data.sender) {
-        this.currentUserChating = data.sender
-        this.countCheckMgsOfUser = 1
-        return true
+      if (
+        this.countCheckMgsOfUser === 0 ||
+        this.currentUserChating !== data.sender
+      ) {
+        this.currentUserChating = data.sender;
+        this.countCheckMgsOfUser = 1;
+        return true;
       }
-      return false
+      return false;
     },
 
     scrollBot() {
@@ -308,11 +325,16 @@ export default {
     async contentChat(msg) {
       this.listMsg.push(msg);
       this.listMsg.forEach((e) => {
-        if(this.checkMessageOfUser(e)) {
-          e.commentFirst = 'FIRST'
+        e.dateTime = this.formatDateTime(e.timeCreate);
+      });
+      this.filterTimeOfLastComment();
+      this.listMsg.forEach((e) => {
+        if (this.checkMessageOfUser(e) || e.checkDateTimeFirst === "START_TIME") {
+          e.commentFirst = "FIRST";
         }
         e.timeCreateFormat = this.formatTimeChat(e.timeCreate);
       });
+
       // await this.commentsUser()
       setTimeout(() => {
         this.scrollBot();
@@ -320,7 +342,7 @@ export default {
     },
 
     async sendMessage() {
-      if (this.message && this.stompClient) {
+      if (this.message.trim() !== "" && this.stompClient) {
         if (
           this.nameGroupCurrent.includes(this.username) &&
           this.typeRoomCurrent === "SINGLE" &&
@@ -342,6 +364,8 @@ export default {
           "/app/chat.sendMessage/" + this.groupChat.idGroupChat,
           JSON.stringify(this.groupChat)
         );
+        this.message = "";
+      } else {
         this.message = "";
       }
     },
@@ -421,6 +445,11 @@ export default {
       else check = "AM";
       return temp.getHours() + ":" + temp.getMinutes() + " " + check;
     },
+
+    formatDateTime(time) {
+      let temp = new Date(time);
+      return temp.getDate() + "/" + temp.getMonth() + "/" + temp.getFullYear();
+    },
     async commentsUser() {
       this.dataCmt.idGroup = this.groupChat.idGroupChat;
       let res = await this.$store.dispatch(
@@ -428,16 +457,37 @@ export default {
         this.dataCmt
       );
       if (res.status === "SUCCESS") {
-        this.listMsg = res.content.content;
+        this.listMsg = res.content.content.reverse();
+        this.listMsg.forEach((e) => {
+          e.dateTime = this.formatDateTime(e.timeCreate);
+        });
+        this.filterTimeOfLastComment();
+        this.listMsg.forEach((e) => {
+          if (this.checkMessageOfUser(e) || e.checkDateTimeFirst === "START_TIME") {
+            e.commentFirst = "FIRST";
+          }
+          e.timeCreateFormat = this.formatTimeChat(e.timeCreate);
+        });
+
+        console.log("nao", this.listMsg);
       } else {
         this.listMsg = [];
       }
-      this.listMsg.forEach((e) => {
-        if(this.checkMessageOfUser(e)) {
-          e.commentFirst = 'FIRST'
+    },
+
+    filterTimeOfLastComment() {
+      let tempCheck = this.listMsg[0].dateTime;
+      if (this.listMsg.length === 1)
+        this.listMsg[0].checkDateTimeFirst = "START_TIME";
+      else {
+        this.listMsg[0].checkDateTimeFirst = "START_TIME";
+        for (let i = 0; i < this.listMsg.length - 1; i++) {
+          if (tempCheck !== this.listMsg[i + 1].dateTime) {
+            this.listMsg[i + 1].checkDateTimeFirst = "START_TIME";
+            tempCheck = this.listMsg[i + 1].dateTime; 
+          }
         }
-        e.timeCreateFormat = this.formatTimeChat(e.timeCreate);
-      });
+      }
     },
   },
 };
@@ -501,6 +551,18 @@ export default {
 }
 .v-application .elevation-4 {
   box-shadow: none !important;
+}
+.break-start-time {
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid #bbb;
+  line-height: 0.1em;
+  margin: 10px 0 20px;
+}
+.break-start-time span {
+  background: rgb(234 240 245);
+  padding: 0 10px;
+  color: black;
 }
 </style>
 
